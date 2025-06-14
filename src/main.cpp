@@ -6,5 +6,5 @@ int main()
 {
     Game game;
 
-    game.run(10);
+    game.run(20);
 }
