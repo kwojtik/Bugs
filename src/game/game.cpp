@@ -34,6 +34,8 @@ std::vector<int> Game::generate_move_genome()
 
 void Game::run(int bugs_amount)
 {
+    m_smellmap.set_render_window(&m_window, m_window_height, m_window_width);
+
     for(int i=0; i < bugs_amount; i++)
     {
         Bug bug(random_within_bounds(), generate_move_genome(), rand()%10);
@@ -69,9 +71,14 @@ void Game::render()
     
     for(Bug& bug : m_bugs)
     {
-        bug.move(rand()%100, m_window_height, m_window_width);
-        m_window.draw(bug);
+        bug.move(rand()%100, m_window_height, m_window_width, &m_bugs, m_smellmap.get_grid());
+        if(!bug.is_dying())
+        {
+            m_window.draw(bug);
+        }
     }
+
+    m_smellmap.simulate(m_bugs);
 
     m_window.display();
 }

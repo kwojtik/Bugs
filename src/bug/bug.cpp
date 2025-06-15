@@ -16,12 +16,15 @@ Bug::Bug()
     m_energy_needed = 30;
 
     m_speed = 1;
+
+    m_is_angry = false;
+    m_is_dead = false;
 }
 
 Bug::Bug(sf::Vector2f position, std::vector<int> move_genome, int speed)
 {
     setSize(sf::Vector2f(3, 3));
-    setFillColor(sf::Color::Red);
+    setFillColor(sf::Color::Green);
     setPosition(position);
 
     m_energy = 100;
@@ -44,13 +47,32 @@ Bug::Bug(sf::Vector2f position, std::vector<int> move_genome, int speed)
     }
 
     m_time_since_move=0;
-    m_speed=1;
+    m_speed = 1;
     m_direction = 0;
+
+    m_is_angry = false;
+    m_is_dead = false;
+}
+
+sf::Vector2f Bug::get_position()
+{
+    return getPosition();
+}
+
+float Bug::distance_between_bugs(sf::Vector2f bug_position)
+{
+    return sqrt((get_position().x-bug_position.x)*(get_position().x-bug_position.x)+
+    (get_position().y-bug_position.y)*(get_position().y-bug_position.y));
+}
+
+bool Bug::is_angry()
+{
+    return m_is_angry;
 }
 
 bool Bug::is_dying()
 {
-    if(m_energy < 0 || m_age > m_max_age)
+    if(m_energy < 0 || m_age > m_max_age || m_is_dead)
     {
         return true;
     }
@@ -71,7 +93,7 @@ int Bug::reproduce()
     return m_energy;
 }
 
-int Bug::calculate_next_direction(int move)
+int Bug::calculate_next_direction(int move, std::vector<Bug>* bugs, std::vector<std::vector<float>> smell)
 {
     int direction = 0;
     
@@ -112,7 +134,7 @@ sf::Vector2f Bug::calculate_position(int height, int width)
     return position;
 }
 
-void Bug::move(int move, int height, int width)
+void Bug::move(int move, int height, int width, std::vector<Bug>* bugs, std::vector<std::vector<float>> smell)
 {
     int reproduction = 0;
 
@@ -125,11 +147,17 @@ void Bug::move(int move, int height, int width)
     {
         m_energy--;
 
-        m_direction = (m_direction + calculate_next_direction(move)) % 6;
+        m_direction = (m_direction + calculate_next_direction(move, bugs, smell)) % 6;
 
         setPosition(calculate_position(height, width));
 
         m_time_since_move = 0;
+
+        m_emited_sound = m_speed;
+    }
+    else
+    {
+        m_emited_sound = 0;
     }
 
     m_time_since_move++;

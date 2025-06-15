@@ -8,7 +8,7 @@
 
 class Bug : public sf::RectangleShape
 {
-    private:
+    protected:
     int m_energy;
     int m_age;
     int m_max_age;
@@ -29,14 +29,31 @@ class Bug : public sf::RectangleShape
     int m_move_sum;
     std::vector<float> m_move_probability;
     int m_direction;
+    bool m_is_angry;
+    float m_emited_sound;
+    bool m_is_dead;
 
     public:
     Bug();
-    Bug(sf::Vector2f position, std::vector<int> move_genome, int speed);
+    Bug(
+        sf::Vector2f position, 
+        std::vector<int> move_genome, 
+        int speed);
+    sf::Vector2f get_position();
+    float distance_between_bugs(sf::Vector2f bug_position);
+    bool is_angry();
     bool is_dying();
     bool can_reproduce();
     int reproduce();
-    int calculate_next_direction(int move);
+    int calculate_next_direction(
+        int move, 
+        std::vector<Bug>* bugs, 
+        std::vector<std::vector<float>> smell);
     sf::Vector2f calculate_position(int height, int width);
-    void move(int move, int height, int width);
+    void move(
+        int move, 
+        int height, 
+        int width, 
+        std::vector<Bug>* bugs, 
+        std::vector<std::vector<float>> smell);
 };

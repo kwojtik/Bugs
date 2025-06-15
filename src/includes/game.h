@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "bug.h"
+#include "smellmap.h"
 
 class Game
 {
@@ -14,6 +15,7 @@ class Game
     unsigned int m_window_width;
     unsigned int m_window_height;
     std::vector<Bug> m_bugs;
+    SmellMap m_smellmap;
 
     public:
     Game();
