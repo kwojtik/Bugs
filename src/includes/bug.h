@@ -16,15 +16,7 @@ class Bug : public sf::RectangleShape
     int m_energy_needed;
     int m_speed;
     int m_time_since_move;
-    const std::vector<sf::Vector2f> m_moves = 
-        {
-            sf::Vector2f({0, 2}),
-            sf::Vector2f({2, 1}),
-            sf::Vector2f({2, -1}),
-            sf::Vector2f({0, -2}),
-            sf::Vector2f({-2, -1}),
-            sf::Vector2f({-2, 1})
-        };
+    std::vector<sf::Vector2f> m_moves;
     std::vector<int> m_move_genome;
     int m_move_sum;
     std::vector<float> m_move_probability;
@@ -40,12 +32,15 @@ class Bug : public sf::RectangleShape
         std::vector<int> move_genome, 
         int speed);
     sf::Vector2f get_position();
+    int get_energy();
     float distance_between_bugs(sf::Vector2f bug_position);
     bool is_angry();
     bool is_dying();
+    float emiting_sound();
+    void die();
     bool can_reproduce();
-    int reproduce();
-    int calculate_next_direction(
+    virtual int reproduce(std::vector<Bug>* bugs);
+    virtual int calculate_next_direction(
         int move, 
         std::vector<Bug>* bugs, 
         std::vector<std::vector<float>> smell);

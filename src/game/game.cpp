@@ -5,8 +5,8 @@ Game::Game()
 {
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
-    m_window_width = 1500;
-    m_window_height = 1000;
+    m_window_width = 100;
+    m_window_height = 100;
 
     m_window.create(sf::VideoMode({m_window_width, m_window_height}, desktop.bitsPerPixel), "Bugs", sf::Style::None);
     m_window.setFramerateLimit(60);
@@ -39,8 +39,10 @@ void Game::run(int bugs_amount)
     for(int i=0; i < bugs_amount; i++)
     {
         Bug bug(random_within_bounds(), generate_move_genome(), rand()%10);
+        AngryBug angrybug(random_within_bounds(), generate_move_genome(), rand()%10);
 
         m_bugs.push_back(bug);
+        m_angrybugs.push_back(angrybug);
     }
 
     while(m_window.isOpen())
@@ -69,6 +71,8 @@ void Game::render()
 {
     m_window.clear();
     
+    m_smellmap.simulate(m_bugs);
+
     for(Bug& bug : m_bugs)
     {
         bug.move(rand()%100, m_window_height, m_window_width, &m_bugs, m_smellmap.get_grid());
@@ -78,7 +82,14 @@ void Game::render()
         }
     }
 
-    m_smellmap.simulate(m_bugs);
+    for(AngryBug& bug : m_angrybugs)
+    {
+        bug.move(rand()%100, m_window_height, m_window_width, &m_bugs, m_smellmap.get_grid());
+        if(!bug.is_dying())
+        {
+            m_window.draw(bug);
+        }
+    }
 
     m_window.display();
 }

@@ -7,10 +7,10 @@ Bug::Bug()
     setFillColor(sf::Color::Red);
     setPosition(sf::Vector2f({0.0, 0.0}));
 
-    m_energy = 100;
+    m_energy = 200;
     m_age = 0;
 
-    m_max_age = 100;
+    m_max_age = 500;
     m_adult_age = 50;
 
     m_energy_needed = 30;
@@ -19,6 +19,15 @@ Bug::Bug()
 
     m_is_angry = false;
     m_is_dead = false;
+    m_moves = 
+            {
+                sf::Vector2f({0, 2}),
+                sf::Vector2f({2, 1}),
+                sf::Vector2f({2, -1}),
+                sf::Vector2f({0, -2}),
+                sf::Vector2f({-2, -1}),
+                sf::Vector2f({-2, 1})
+            };
 }
 
 Bug::Bug(sf::Vector2f position, std::vector<int> move_genome, int speed)
@@ -27,10 +36,10 @@ Bug::Bug(sf::Vector2f position, std::vector<int> move_genome, int speed)
     setFillColor(sf::Color::Green);
     setPosition(position);
 
-    m_energy = 100;
+    m_energy = 200;
     m_age = 0;
 
-    m_max_age = 100;
+    m_max_age = 500;
     m_adult_age = 50;
 
     m_energy_needed = 30;
@@ -52,11 +61,26 @@ Bug::Bug(sf::Vector2f position, std::vector<int> move_genome, int speed)
 
     m_is_angry = false;
     m_is_dead = false;
+
+    m_moves = 
+        {
+            sf::Vector2f({0, 2}),
+            sf::Vector2f({2, 1}),
+            sf::Vector2f({2, -1}),
+            sf::Vector2f({0, -2}),
+            sf::Vector2f({-2, -1}),
+            sf::Vector2f({-2, 1})
+        };
 }
 
 sf::Vector2f Bug::get_position()
 {
     return getPosition();
+}
+
+int Bug::get_energy()
+{
+    return m_energy;
 }
 
 float Bug::distance_between_bugs(sf::Vector2f bug_position)
@@ -74,10 +98,22 @@ bool Bug::is_dying()
 {
     if(m_energy < 0 || m_age > m_max_age || m_is_dead)
     {
+        die();
         return true;
     }
-
+    
     return false;
+}
+
+float Bug::emiting_sound()
+{
+    return m_emited_sound;
+}
+
+void Bug::die()
+{
+    m_energy = 0;
+    m_is_dead = true;
 }
 
 bool Bug::can_reproduce()
@@ -85,12 +121,15 @@ bool Bug::can_reproduce()
     return m_age > m_adult_age && m_energy > m_energy_needed;
 }
 
-int Bug::reproduce()
+int Bug::reproduce(std::vector<Bug>* bugs)
 {
+    Bug new_bug(get_position(), m_move_genome, m_speed);
+
+    bugs->push_back(new_bug);
 
     m_energy /= 2;
 
-    return m_energy;
+    return 1;
 }
 
 int Bug::calculate_next_direction(int move, std::vector<Bug>* bugs, std::vector<std::vector<float>> smell)
@@ -140,7 +179,7 @@ void Bug::move(int move, int height, int width, std::vector<Bug>* bugs, std::vec
 
     if(can_reproduce())
     {
-        reproduction = reproduce();
+        reproduction = reproduce(bugs);
     }
 
     if(m_time_since_move%m_speed == 0)
