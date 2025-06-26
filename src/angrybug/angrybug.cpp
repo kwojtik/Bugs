@@ -204,3 +204,8 @@ int AngryBug::calculate_next_direction(
     m_direction = (((m_direction-m_move_genome[m_direction])%6) + 6 )%6;
     return m_direction;
 }
+
+void AngryBug::eat(std::vector<Food>* food)
+{
+    return;
+}

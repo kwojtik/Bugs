@@ -5,6 +5,8 @@
 #include <cmath>
 #include <iostream>
 
+#include "food.h"
+
 
 class Bug : public sf::RectangleShape
 {
@@ -45,10 +47,14 @@ class Bug : public sf::RectangleShape
         std::vector<Bug>* bugs, 
         std::vector<std::vector<float>> smell);
     sf::Vector2f calculate_position(int height, int width);
+    virtual void eat(std::vector<Food>* food);
     void move(
         int move, 
         int height, 
         int width, 
         std::vector<Bug>* bugs, 
-        std::vector<std::vector<float>> smell);
+        std::vector<std::vector<float>> smell,
+        std::vector<Food>* food
+    );
+    // food
 };

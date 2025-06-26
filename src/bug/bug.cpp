@@ -132,7 +132,10 @@ int Bug::reproduce(std::vector<Bug>* bugs)
     return 1;
 }
 
-int Bug::calculate_next_direction(int move, std::vector<Bug>* bugs, std::vector<std::vector<float>> smell)
+int Bug::calculate_next_direction(
+    int move, 
+    std::vector<Bug>* bugs, 
+    std::vector<std::vector<float>> smell)
 {
     int direction = 0;
     
@@ -173,7 +176,29 @@ sf::Vector2f Bug::calculate_position(int height, int width)
     return position;
 }
 
-void Bug::move(int move, int height, int width, std::vector<Bug>* bugs, std::vector<std::vector<float>> smell)
+void Bug::eat(std::vector<Food>* food)
+{
+    for(auto it = food->begin(); it != food->end();)
+    {
+        if(distance_between_bugs(it->get_position()) < 2)
+        {
+            m_energy = it->eat();
+            it = food->erase(it);
+        }
+        else
+        {
+            it++;
+        }
+    }
+}
+
+void Bug::move(
+    int move, 
+    int height, 
+    int width, 
+    std::vector<Bug>* bugs, 
+    std::vector<std::vector<float>> smell,
+    std::vector<Food>* food)
 {
     int reproduction = 0;
 
@@ -198,6 +223,8 @@ void Bug::move(int move, int height, int width, std::vector<Bug>* bugs, std::vec
     {
         m_emited_sound = 0;
     }
+
+    eat(food);
 
     m_time_since_move++;
     m_age++;

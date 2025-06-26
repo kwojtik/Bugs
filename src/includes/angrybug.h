@@ -32,4 +32,5 @@ class AngryBug : public Bug
         int move, 
         std::vector<Bug>* bugs, 
         std::vector<std::vector<float>> smell);
+    void eat(std::vector<Food>* food);
 };

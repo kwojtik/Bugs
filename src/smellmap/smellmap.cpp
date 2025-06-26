@@ -75,6 +75,8 @@ void SmellMap::draw()
 
 void SmellMap::simulate(std::vector<Bug> bugs)
 {
+    apply_diffusion();
+    
     for(Bug buggy : bugs)
     {
         if(!buggy.is_dying())
@@ -88,6 +90,5 @@ void SmellMap::simulate(std::vector<Bug> bugs)
         }
     }
 
-    apply_diffusion();
     draw();
 }

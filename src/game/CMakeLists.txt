@@ -7,4 +7,5 @@ target_link_libraries(game
     bug
     angrybug
     smellmap
+    food
 )
